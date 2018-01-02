@@ -8,6 +8,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { WeatherProvider } from '../providers/weather/weather';
 
+import { HttpClientModule} from "@angular/common/http";
+
 @NgModule({
   declarations: [
     MyApp,
@@ -15,6 +17,7 @@ import { WeatherProvider } from '../providers/weather/weather';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    HttpClientModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
