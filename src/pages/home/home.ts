@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { WeatherProvider } from "../../providers/weather/weather";
+import { Storage } from "@ionic/storage";
 
 @IonicPage()
 @Component({
@@ -11,30 +12,51 @@ import { WeatherProvider } from "../../providers/weather/weather";
 export class HomePage {
 
   weather:any;
+  city:any;
   location:{
     city:string,
     state:string
   };
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private weatherProvider:WeatherProvider) {
-    this.getWeather();
-  }
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              private weatherProvider:WeatherProvider,
+              private storage:Storage)
+  {
 
-  getWeather() {
-      this.location= {
-        city: 'Jakarta',
-        state: 'ID'
-      };
-
-      this.weatherProvider.getWeather(this.location.city, this.location.state)
-        .then(data => {
-          this.weather = data.current_observation;
-          console.log(this.weather.display_location.full);
-      });
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomePage');
+  }
+
+  ionViewWillEnter(){
+    this.storage.get('location').then((val) => {
+      if(val != null){
+        this.location = JSON.parse(val);
+        console.log(this.location);
+
+      } else {
+        this.location = {
+          city: 'Semarang',
+          state: 'ID'
+        }
+      }
+
+      this.weatherProvider.getWeather(this.location.city, this.location.state)
+        .then(weather => {
+          this.weather = weather;
+          console.log(this.weather);
+        });
+
+      this.weatherProvider.getCity()
+        .then(city => {
+          this.city = city;
+          console.log(this.city);
+        });
+    });
+
+
   }
 
 }
