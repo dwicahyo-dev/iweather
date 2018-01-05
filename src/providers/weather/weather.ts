@@ -4,26 +4,32 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class WeatherProvider {
 
-  apiKey: string = 'eca0c3cce20cd52d';
+  apiKey: string = '871862cfa7f34da49f5c38d365ed66d9';
   url: string;
 
-  weather:any;
-
   constructor(public http: HttpClient) {
-    console.log('Hello WeatherProvider Provider');
-
-    this.url = `http://api.wunderground.com/api/${this.apiKey}/conditions/q/`;
+    this.url = `http://api.openweathermap.org/data/2.5/weather?q=`;
   }
 
   getWeather(city, state) {
     return new Promise(resolve => {
-      this.http.get(`${this.url}/${state}/${city}.json`).subscribe(data => {
-        resolve(data);
+      this.http.get(`${this.url}${city},${state}&units=metric&appid=${this.apiKey}`)
+        .subscribe(data => {
+          resolve(data);
       }, err => {
         console.log(err);
       });
     });
   }
 
-
+  getCity(){
+    return new Promise(resolve => {
+      this.http.get(`../assets/data/city.list.json`)
+        .subscribe(data => {
+          resolve(data);
+        }, err => {
+          console.log(err);
+        });
+    });
+  }
 }
